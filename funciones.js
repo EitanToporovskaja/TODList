@@ -32,6 +32,8 @@ list.addEventListener('click', function(ev) {
 
 // Create a new list item when clicking on the "Add" button
 function elementNuevo() {
+  var fecha =new Date().toLocaleString();
+  console.log(fecha);
   var li = document.createElement("li");
   var inputValue = document.getElementById("myInput").value;
   var t = document.createTextNode(inputValue);
