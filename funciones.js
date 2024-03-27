@@ -1,62 +1,79 @@
-// Create a "close" button and append it to each list item
-var myNodelist= document.getElementsByTagName("LI");
-//console.log(document.getElementsByTagName("LI"));//Dice: nada
-for (var i = 0; i < myNodelist.length; i++) {
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  myNodelist[i].appendChild(span);
-}
+let arr = [];
 
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var arr=[];
-for (var i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-    arr.push (document.createElement("SPAN"));
-    //console.log(document.createElement("SPAN"));//Dice: nada
-  }
-  
-}
-
-// Add a "checked" symbol when clicking on a list item
-var list = document.querySelector('ul');
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-  }
-}, false);
-
-// Create a new list item when clicking on the "Add" button
-function elementNuevo() {
-  var fecha =new Date().toLocaleString();
-  console.log(fecha);
-  var li = document.createElement("li");
-  var inputValue = document.getElementById("myInput").value;
-  var t = document.createTextNode(inputValue);
-  li.appendChild(t);
-  if (inputValue === '') {
-    alert("No has agregado ninguna tarea");
-  } else {
-    document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
-
-  var span = document.createElement("SPAN");
-  //console.log(document.createElement("SPAN"));//Dice: <span></span>
-  var txt = document.createTextNode("\u00D7");
-  //console.log(document.createTextNode("\u00D7"));Dice:´x´
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
-
-  for (var i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
+function agregarTodo() {
+    const todoInput = document.getElementById("todoInput").value.trim();// trim() :quita los espacios iniciales, finales y repetidos del texto.
+    if (todoInput !== "") {
+        const timestamp = new Date().toLocaleString();
+        arr.push({ tarea: todoInput, timestamp: timestamp, completado: false });
+        mostrarTodos();
+        document.getElementById("todoInput").value = "";
+    } else {
+        alert("No has agregado ninguna tarea");
     }
-  }
 }
+
+function mostrarTodos() {
+    const todoList = document.getElementById("todoList");
+    todoList.innerHTML = "";
+    arr.forEach(todo => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <span class="${todo.completado ? 'completado' : ''}">
+                ${todo.tarea} - ${todo.timestamp}
+            </span>
+        `;
+        li.addEventListener("click", () => toggleTodoCompletion(todo));
+        todoList.appendChild(li);
+        // Añadir botón de cierre
+        const span = document.createElement("SPAN");
+        const txt = document.createTextNode("\u00D7");
+        span.className = "close";
+        span.appendChild(txt);
+        li.appendChild(span);
+        // Asignar función de ocultar al botón de cierre
+        span.onclick = function() {
+            const div = this.parentElement;
+            div.style.mostar = "none";
+            borrarTodo(div);
+        };
+    });
+}
+
+function toggleTodoCompletion(todo) {
+    todo.completado = !todo.completado;
+    if (todo.completado) {
+        todo.completadoTimestamp = new Date().toLocaleString();
+    } else {
+        delete todo.completadoTimestamp;
+    }
+    mostrarTodos();
+}
+
+function borrarTodos() {
+    arr = [];
+    mostrarTodos();
+}
+
+function borrarTodo(todoElement) {
+    const tareaText = todoElement.textContent.split(' - ')[0]; // Obtener el texto de la tarea
+    arr = arr.filter(todo => todo.tarea !== tareaText); // Filtrar el array para eliminar la tarea correspondiente
+}
+
+function mostrarTareaMasRapida() {
+    if (arr.length === 0) {
+        alert("Aún no se han agregado tareas!");
+        return;
+    }
+    const tareaRapida = arr.reduce((prev, curr) => {
+    //El método reduce es un método de arrays en JavaScript que te permite reducir un array a un solo valor, 
+    //este array puede contener cualquier tipo de dato un número, un cadena de texto, un objeto o incluso un nuevo array.
+
+        return (new Date(curr.timestamp) - new Date(prev.timestamp) < 0) ? curr : prev;
+    });
+    alert(`La tarea más rápida fue: ${tareaRapida.tarea}`);
+}
+
+// Cargar tareas al inicio
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarTodos();
+});

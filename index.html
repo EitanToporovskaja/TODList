@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="myDIV" class="header">
-        <h2>Mi To Do List</h2>
-        <input type="text" id="myInput" placeholder="Title...">
-        <span onclick="newElement()" class="addBtn">Add</span>
-      </div>
-      
-      <ul id="myUL">
-        
-      </ul>
-      <script src="funciones.js"></script>
+    <div class="container">
+        <h1>Todo List</h1>
+        <input type="text" id="todoInput" placeholder="Agregar nuevo todo">
+        <button onclick="agregarTodo()">Agregar Todo</button>
+        <button onclick="mostrarTareaMasRapida()">Mostrar la tarea mas rapida</button>
+        <ul id="todoList"></ul>
+        <button onclick="borrarTodos()">Borrar los Todos</button>
+    </div>
+
+    <script src="funciones.js"></script>
 </body>
 </html>
